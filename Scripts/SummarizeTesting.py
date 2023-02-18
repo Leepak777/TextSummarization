@@ -3,7 +3,8 @@ from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer
 from sumy.utils import get_stop_words
 
-def generate_summary(file_path, language='english'):
+def generate_summary(file_path):
+    language='english'
     SENTENCES_COUNT = 0
 
     with open(file_path, 'r') as f:
@@ -26,5 +27,4 @@ def generate_summary(file_path, language='english'):
     return summary_sentences
 
 
-summary = generate_summary('document.txt', 'english')
-print(summary)
+
