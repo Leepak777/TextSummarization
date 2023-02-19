@@ -7,8 +7,9 @@ def generate_summary(file_path):
     language='english'
     SENTENCES_COUNT = 0
 
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', errors='ignore') as f:
         text = f.read()
+
 
     desired_char = '.'
 
@@ -25,6 +26,5 @@ def generate_summary(file_path):
     for sentence in summary:
         summary_sentences.append(str(sentence))
     return summary_sentences
-
 
 

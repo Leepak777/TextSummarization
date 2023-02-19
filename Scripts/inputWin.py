@@ -1,7 +1,7 @@
 import tkinter as tk
 import random
 import SummarizeTesting
-import translate
+import translate_Sentences
 
 languages = [
     'af', 'sq', 'am', 'ar', 'hy', 'az', 'eu', 'be', 'bn', 'bs', 'bg', 'ca', 'ceb', 'ny', 'zh-cn', 'zh-tw', 'co', 'hr',
@@ -12,45 +12,52 @@ languages = [
     'tt', 'te', 'th', 'tr', 'tk', 'uk', 'ur', 'ug', 'uz', 'vi', 'cy', 'xh', 'yi', 'yo', 'zu'
 ]
 
-random_number = random.randint(0, len(languages) - 1)
 
 def handle_input():
     input_str = input_entry.get()
-    output_label.config(text="You entered: " + save_txt(input_str))
+    output_label.config(text="You entered: " + input_str)
 
 def write_to_file(string_to_write, file_path):
-    with open(file_path, "w") as file:
+    with open(file_path, mode="w", encoding="utf-8") as file:
         file.write(string_to_write)
         
 def save_txt():
-    input_str = input_entry.get()
+    input_str = input_entry.get("1.0","end")
     write_to_file(input_str,"document.txt")
     summary = SummarizeTesting.generate_summary("document.txt")
-    translated_summary = []
-    for sentence in summary:
-        translated_sentence = translate.translateSentence(sentence, languages[random.randint(0, len(languages) - 1)])
-        translated_summary.append(translated_sentence)
-    summary_text = "\n".join(translated_summary)
-    output_window = tk.Toplevel(window)
-    output_label = tk.Label(output_window, text=summary_text)
-    output_label.pack()
+    ans = []
+    for i in range(len(summary)):
+        # Translate to a random language initially
+        translated_summary = translate_Sentences.translateSentence(summary[i], languages[random.randint(0, len(languages) - 1)])
+        ans.append(translated_summary)
+        print(translated_summary)
+    output_label.config(text="\n".join(ans))
+    return ans
 
 # create a new window
 window = tk.Tk()
 window.title("My App")
-window.geometry("400x300")
+window.geometry("690x690")
 
 # create an input field
-input_entry = tk.Entry(window)
+input_entry = tk.Text(window, width = 69, height = 42)
 input_entry.pack()
 
 # create a button to handle the input
 button = tk.Button(window, text="Submit", command=save_txt)
 button.pack()
 
+# create a frame for output
+output_frame = tk.Frame(window)
+output_frame.pack(fill=tk.BOTH, expand=True)
+output_frame.pack_propagate(False) # stop frame from resizing based on contents
+
 # create a label for output
-output_label = tk.Label(window, text="")
-output_label.pack()
+output_label = tk.Label(output_frame, text="")
+output_label.pack(fill=tk.BOTH, expand=True)
+
+# run the main loop
+
 
 # run the main loop
 window.mainloop()
