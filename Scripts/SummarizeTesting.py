@@ -2,6 +2,10 @@ from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer
 from sumy.utils import get_stop_words
+from sumy.nlp.stemmers import Stemmer
+
+
+
 
 def generate_summary(file_path):
     language='english'
@@ -17,9 +21,12 @@ def generate_summary(file_path):
         if char == desired_char:
             SENTENCES_COUNT += 1
             
-    SENTENCES_COUNT /= 10
+    SENTENCES_COUNT /= 10 
+    if SENTENCES_COUNT <= 1:
+        SENTENCES_COUNT = 1
     parser = PlaintextParser.from_file(file_path, Tokenizer(language))
-    summarizer = LsaSummarizer()
+    stemmer = Stemmer(language)
+    summarizer = LsaSummarizer(stemmer)
     summarizer.stop_words = get_stop_words(language)
     summary = summarizer(parser.document, SENTENCES_COUNT)
     summary_sentences = []
